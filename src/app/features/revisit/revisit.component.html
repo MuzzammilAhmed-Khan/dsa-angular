@@ -1,0 +1,67 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>Revisit Queue</h1>
+    <span class="count-badge">{{ items.length }} problems</span>
+  </div>
+
+  @if (loading) {
+    <mat-progress-bar mode="indeterminate" />
+  } @else if (items.length === 0) {
+    <div class="empty-state">
+      <mat-icon>bookmark_border</mat-icon>
+      <p>No problems flagged for revisit.</p>
+      <p class="empty-sub">Open a problem and click the bookmark icon to add it here.</p>
+    </div>
+  } @else {
+    <table mat-table [dataSource]="items" class="revisit-table">
+
+      <ng-container matColumnDef="problem">
+        <th mat-header-cell *matHeaderCellDef>Problem</th>
+        <td mat-cell *matCellDef="let p">
+          <a [routerLink]="['/problems', p.problemId]" class="problem-link">{{ p.problemTitle }}</a>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="topic">
+        <th mat-header-cell *matHeaderCellDef>Topic</th>
+        <td mat-cell *matCellDef="let p">
+          <span class="topic-chip">{{ p.topicName }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="difficulty">
+        <th mat-header-cell *matHeaderCellDef>Difficulty</th>
+        <td mat-cell *matCellDef="let p">
+          <span [ngClass]="diffClass(p.difficulty)" class="diff-text">{{ p.difficulty }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let p">
+          <span [ngClass]="statusClass(p.status)" class="status-text">{{ p.status | titlecase }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="attempts">
+        <th mat-header-cell *matHeaderCellDef>Attempts</th>
+        <td mat-cell *matCellDef="let p">{{ p.attempts }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let p">
+          <a mat-icon-button [routerLink]="['/problems', p.problemId]" matTooltip="Open problem">
+            <mat-icon>arrow_forward</mat-icon>
+          </a>
+          <button mat-icon-button (click)="unflag(p)" matTooltip="Remove from revisit" class="unflag-btn">
+            <mat-icon>bookmark_remove</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="revisit-row"></tr>
+    </table>
+  }
+</div>

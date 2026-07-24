@@ -1,0 +1,60 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>Stats</h1>
+  </div>
+
+  @if (loading) {
+    <mat-progress-bar mode="indeterminate" />
+  } @else if (stats) {
+
+    <!-- Summary row -->
+    <div class="summary-row">
+      <mat-card class="dsa-card summary-card">
+        <mat-card-content>
+          <div class="big-num">{{ stats.solved }}<span class="of">/{{ stats.totalProblems }}</span></div>
+          <div class="summary-label">Problems Solved</div>
+          <mat-progress-bar mode="determinate" [value]="stats.solvedPercent" color="accent" class="mt-16" />
+          <div class="pct-label">{{ stats.solvedPercent }}%</div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="dsa-card summary-card">
+        <mat-card-content>
+          <div class="big-num attempted-num">{{ stats.attempted }}</div>
+          <div class="summary-label">Attempted</div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="dsa-card summary-card">
+        <mat-card-content>
+          <div class="big-num revisit-num">{{ stats.toRevisit }}</div>
+          <div class="summary-label">To Revisit</div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Charts row -->
+    <div class="charts-row">
+      <mat-card class="dsa-card chart-card">
+        <mat-card-header><mat-card-title>Overall Progress</mat-card-title></mat-card-header>
+        <mat-card-content class="chart-content">
+          <canvas baseChart [data]="doughnutData" type="doughnut" [options]="doughnutOptions"></canvas>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="dsa-card chart-card">
+        <mat-card-header><mat-card-title>By Difficulty</mat-card-title></mat-card-header>
+        <mat-card-content class="chart-content">
+          <canvas baseChart [data]="barDiffData" type="bar" [options]="barOptions"></canvas>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- By topic -->
+    <mat-card class="dsa-card mt-24">
+      <mat-card-header><mat-card-title>Solved by Topic</mat-card-title></mat-card-header>
+      <mat-card-content class="chart-content-wide">
+        <canvas baseChart [data]="barTopicData" type="bar" [options]="barOptions"></canvas>
+      </mat-card-content>
+    </mat-card>
+
+  }
+</div>

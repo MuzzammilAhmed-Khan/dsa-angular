@@ -1,0 +1,24 @@
+<mat-sidenav-container class="shell">
+  <mat-sidenav mode="side" opened class="sidenav">
+    <div class="sidenav-logo">
+      <mat-icon>terminal</mat-icon>
+      <span>DSA Practice</span>
+    </div>
+
+    <mat-nav-list>
+      @for (item of navItems; track item.route) {
+        <a mat-list-item
+           [routerLink]="item.route"
+           routerLinkActive="nav-active"
+           [routerLinkActiveOptions]="{ exact: item.route === '/dashboard' }">
+          <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+          <span matListItemTitle>{{ item.label }}</span>
+        </a>
+      }
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="content">
+    <router-outlet />
+  </mat-sidenav-content>
+</mat-sidenav-container>

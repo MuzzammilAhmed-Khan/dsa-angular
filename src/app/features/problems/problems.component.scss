@@ -1,0 +1,65 @@
+.filters {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.filter-search { flex: 1; min-width: 200px; }
+.filter-select { width: 160px; }
+
+.problem-count { color: #9e9e9e; font-size: 0.9rem; }
+
+.problems-table {
+  width: 100%;
+  background: #1e1e1e;
+  border: 1px solid #2a2a2a;
+  border-radius: 8px;
+
+  th { background: #1a1a1a; color: #9e9e9e; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  td { border-bottom-color: #2a2a2a; }
+}
+
+.problem-row { cursor: pointer; &:hover { background: #252525; } }
+
+.problem-link {
+  color: #e0e0e0;
+  text-decoration: none;
+  font-weight: 500;
+  &:hover { color: #b39ddb; }
+}
+
+.lc-link { color: #9e9e9e; margin-left: 4px; vertical-align: middle; text-decoration: none; }
+.ext-icon { font-size: 14px; width: 14px; height: 14px; }
+
+.topic-chip {
+  background: #2a2a2a;
+  color: #9e9e9e;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.78rem;
+}
+
+.diff-pill {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.status-cell {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.82rem;
+}
+.status-icon { font-size: 16px; width: 16px; height: 16px; }
+
+.revisit-flag { color: #06b6d4; font-size: 18px; }
+
+.empty-state {
+  text-align: center;
+  padding: 60px 0;
+  color: #6b7280;
+  mat-icon { font-size: 48px; width: 48px; height: 48px; }
+  p { margin-top: 8px; }
+}

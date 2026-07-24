@@ -1,0 +1,84 @@
+
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@use '@angular/material' as mat;
+
+@include mat.core();
+
+$primary: mat.define-palette(mat.$deep-purple-palette, 400, 200, 700);
+$accent:  mat.define-palette(mat.$cyan-palette, A200, A100, A400);
+$warn:    mat.define-palette(mat.$red-palette);
+
+$theme: mat.define-dark-theme((
+  color: (primary: $primary, accent: $accent, warn: $warn),
+  typography: mat.define-typography-config(),
+  density: 0
+));
+
+@include mat.all-component-themes($theme);
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  background: #121212;
+  color: #e0e0e0;
+}
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #1a1a1a; }
+::-webkit-scrollbar-thumb { background: #444; border-radius: 3px; }
+
+.diff-easy   { color: #22c55e !important; }
+.diff-medium { color: #f59e0b !important; }
+.diff-hard   { color: #ef4444 !important; }
+
+.status-solved      { color: #22c55e !important; }
+.status-attempted   { color: #f59e0b !important; }
+.status-not-started { color: #6b7280 !important; }
+
+.dsa-card {
+  background: #1e1e1e !important;
+  border: 1px solid #2a2a2a !important;
+  border-radius: 8px !important;
+}
+
+.page-container {
+  padding: 24px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  h1 { margin: 0; font-size: 1.5rem; font-weight: 500; }
+}
+
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+
+pre.code-block {
+  background: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  padding: 16px;
+  overflow-x: auto;
+  font-family: 'Fira Code', Consolas, monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #e6edf3;
+  white-space: pre-wrap;
+  margin: 0;
+}
+
+.monaco-host {
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  overflow: hidden;
+  ngx-monaco-editor { display: block; }
+}

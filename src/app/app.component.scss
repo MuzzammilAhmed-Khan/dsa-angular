@@ -1,0 +1,35 @@
+.shell {
+  height: 100vh;
+  background: #121212;
+}
+
+.sidenav {
+  width: 220px;
+  background: #171717 !important;
+  border-right: 1px solid #2a2a2a !important;
+
+  .sidenav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 20px 16px 12px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #b39ddb;
+    border-bottom: 1px solid #2a2a2a;
+    margin-bottom: 8px;
+
+    mat-icon { color: #b39ddb; }
+  }
+}
+
+.content {
+  background: #121212;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+::ng-deep .nav-active {
+  background: rgba(179, 157, 219, 0.12) !important;
+  .mat-icon, .mdc-list-item__primary-text { color: #b39ddb !important; }
+}

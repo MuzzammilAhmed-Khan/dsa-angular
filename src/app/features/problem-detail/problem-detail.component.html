@@ -1,0 +1,202 @@
+@if (loading) {
+  <div class="loading-center"><mat-spinner /></div>
+} @else if (problem) {
+
+  <!-- Header -->
+  <div class="detail-header">
+    <button mat-icon-button (click)="back()" class="back-btn">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div class="header-title">
+      <h1>{{ problem.title }}</h1>
+      <div class="header-meta">
+        <span [class]="'diff-chip ' + diffClass(problem.difficulty)">{{ problem.difficulty }}</span>
+        <span class="topic-chip">{{ problem.topicName }}</span>
+        @if (problem.leetcodeUrl) {
+          <a [href]="problem.leetcodeUrl" target="_blank" mat-stroked-button class="lc-btn">
+            <mat-icon>open_in_new</mat-icon> LeetCode
+          </a>
+        }
+      </div>
+    </div>
+    <div class="header-status" [ngClass]="statusClass(problem.progressStatus)">
+      <mat-icon>{{ statusIcon(problem.progressStatus) }}</mat-icon>
+      <span>{{ problem.progressStatus | titlecase }}</span>
+    </div>
+  </div>
+
+  <!-- Main layout -->
+  <div class="detail-body">
+
+    <!-- LEFT: Problem info -->
+    <div class="problem-pane">
+
+      <mat-card class="dsa-card section-card">
+        <mat-card-header><mat-card-title>Description</mat-card-title></mat-card-header>
+        <mat-card-content>
+          <p class="desc-text">{{ problem.description }}</p>
+        </mat-card-content>
+      </mat-card>
+
+      @if (problem.examples) {
+        <mat-card class="dsa-card section-card">
+          <mat-card-header><mat-card-title>Examples</mat-card-title></mat-card-header>
+          <mat-card-content>
+            <pre class="code-block">{{ problem.examples }}</pre>
+          </mat-card-content>
+        </mat-card>
+      }
+
+      @if (problem.constraints) {
+        <mat-card class="dsa-card section-card">
+          <mat-card-header><mat-card-title>Constraints</mat-card-title></mat-card-header>
+          <mat-card-content>
+            <pre class="code-block">{{ problem.constraints }}</pre>
+          </mat-card-content>
+        </mat-card>
+      }
+
+      @if (problem.hints) {
+        <mat-card class="dsa-card section-card">
+          <mat-card-header>
+            <mat-card-title>Hints</mat-card-title>
+            <button mat-button (click)="showHints = !showHints" class="hint-toggle">
+              {{ showHints ? 'Hide' : 'Reveal' }}
+            </button>
+          </mat-card-header>
+          @if (showHints) {
+            <mat-card-content>
+              <p class="hint-text">{{ problem.hints }}</p>
+            </mat-card-content>
+          }
+        </mat-card>
+      }
+
+    </div>
+
+    <!-- RIGHT: Solution + Progress -->
+    <div class="solution-pane">
+
+      <mat-tab-group>
+
+        <!-- Solution tab -->
+        <mat-tab label="Solution">
+          <div class="tab-content">
+
+            <mat-card class="dsa-card section-card">
+              <mat-card-header><mat-card-title>Approach</mat-card-title></mat-card-header>
+              <mat-card-content>
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Explain your approach</mat-label>
+                  <textarea matInput [(ngModel)]="approach" rows="4" placeholder="Describe the algorithm, key insight, data structures used…"></textarea>
+                </mat-form-field>
+              </mat-card-content>
+            </mat-card>
+
+            <mat-card class="dsa-card section-card">
+              <mat-card-header>
+                <mat-card-title>Code (Java)</mat-card-title>
+              </mat-card-header>
+              <mat-card-content class="editor-wrap">
+                <div class="monaco-host">
+                  <ngx-monaco-editor
+                    [options]="editorOptions"
+                    [(ngModel)]="code"
+                    style="height: 360px; display: block;">
+                  </ngx-monaco-editor>
+                </div>
+              </mat-card-content>
+            </mat-card>
+
+            <mat-card class="dsa-card section-card">
+              <mat-card-header><mat-card-title>Complexity</mat-card-title></mat-card-header>
+              <mat-card-content class="complexity-row">
+                <mat-form-field appearance="outline">
+                  <mat-label>Time</mat-label>
+                  <input matInput [(ngModel)]="timeComplexity" placeholder="e.g. O(n log n)">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Space</mat-label>
+                  <input matInput [(ngModel)]="spaceComplexity" placeholder="e.g. O(n)">
+                </mat-form-field>
+              </mat-card-content>
+            </mat-card>
+
+            <mat-card class="dsa-card section-card">
+              <mat-card-header><mat-card-title>Solution Notes</mat-card-title></mat-card-header>
+              <mat-card-content>
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Notes about this solution</mat-label>
+                  <textarea matInput [(ngModel)]="solutionNotes" rows="3"></textarea>
+                </mat-form-field>
+              </mat-card-content>
+            </mat-card>
+
+            <button mat-flat-button color="primary" (click)="saveSolution()" [disabled]="saving" class="save-btn">
+              @if (saving) { <mat-spinner diameter="18" /> } @else { <mat-icon>save</mat-icon> }
+              Save Solution
+            </button>
+
+          </div>
+        </mat-tab>
+
+        <!-- Progress tab -->
+        <mat-tab label="Progress">
+          <div class="tab-content">
+
+            <mat-card class="dsa-card section-card">
+              <mat-card-header><mat-card-title>Mark Status</mat-card-title></mat-card-header>
+              <mat-card-content>
+                <div class="status-buttons">
+                  @for (s of statuses; track s) {
+                    <button mat-stroked-button
+                            [class.active-status]="problem.progressStatus === s"
+                            [ngClass]="statusClass(s)"
+                            (click)="markAs(s)">
+                      <mat-icon>{{ statusIcon(s) }}</mat-icon>
+                      {{ s | titlecase }}
+                    </button>
+                  }
+                </div>
+                @if (progress?.attempts) {
+                  <p class="attempts-text">Attempts: {{ progress!.attempts }}</p>
+                }
+                @if (progress?.solvedAt) {
+                  <p class="solved-date">Solved: {{ progress!.solvedAt | date:'mediumDate' }}</p>
+                }
+              </mat-card-content>
+            </mat-card>
+
+            <mat-card class="dsa-card section-card">
+              <mat-card-header>
+                <mat-card-title>Revisit Flag</mat-card-title>
+                <button mat-icon-button (click)="toggleRevisit()" [matTooltip]="revisit ? 'Remove flag' : 'Flag for revisit'"
+                        [style.color]="revisit ? '#06b6d4' : '#6b7280'" class="revisit-btn">
+                  <mat-icon>{{ revisit ? 'bookmark' : 'bookmark_border' }}</mat-icon>
+                </button>
+              </mat-card-header>
+              <mat-card-content>
+                <p class="hint-text">{{ revisit ? 'Flagged — shows in Revisit queue.' : 'Not flagged.' }}</p>
+              </mat-card-content>
+            </mat-card>
+
+            <mat-card class="dsa-card section-card">
+              <mat-card-header><mat-card-title>Personal Notes</mat-card-title></mat-card-header>
+              <mat-card-content>
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Your notes (pitfalls, edge cases, reminders…)</mat-label>
+                  <textarea matInput [(ngModel)]="personalNotes" rows="5"></textarea>
+                </mat-form-field>
+                <button mat-stroked-button (click)="saveNotes()">
+                  <mat-icon>save</mat-icon> Save Notes
+                </button>
+              </mat-card-content>
+            </mat-card>
+
+          </div>
+        </mat-tab>
+
+      </mat-tab-group>
+    </div>
+  </div>
+}

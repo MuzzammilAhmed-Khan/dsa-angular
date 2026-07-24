@@ -1,0 +1,40 @@
+.summary-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.summary-card mat-card-content {
+  padding: 24px;
+}
+
+.big-num {
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: #22c55e;
+  line-height: 1;
+  .of { font-size: 1.4rem; color: #6b7280; font-weight: 400; }
+}
+.attempted-num { color: #f59e0b; }
+.revisit-num   { color: #06b6d4; }
+
+.summary-label {
+  color: #9e9e9e;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 6px;
+}
+
+.pct-label { font-size: 0.82rem; color: #9e9e9e; margin-top: 6px; }
+
+.charts-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.chart-card mat-card-header { margin-bottom: 8px; }
+.chart-content      { padding: 0 16px 16px; max-height: 280px; }
+.chart-content-wide { padding: 0 16px 16px; max-height: 340px; }

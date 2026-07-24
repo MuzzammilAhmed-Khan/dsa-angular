@@ -1,0 +1,39 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>Topics</h1>
+  </div>
+
+  @if (loading) {
+    <mat-progress-bar mode="indeterminate" />
+  } @else {
+    @for (group of groups; track group.key) {
+      @if (group.topics.length > 0) {
+        <div class="category-section">
+          <div class="category-header">
+            <mat-icon>{{ group.icon }}</mat-icon>
+            <h2>{{ group.label }}</h2>
+            <span class="count-badge">{{ group.topics.length }}</span>
+          </div>
+
+          <div class="topic-grid">
+            @for (topic of group.topics; track topic.id) {
+              <mat-card class="dsa-card topic-card" (click)="browse(topic)">
+                <mat-card-content>
+                  <div class="topic-name">{{ topic.name }}</div>
+                  <p class="topic-desc">{{ topic.description }}</p>
+                  <div class="topic-footer">
+                    <div class="progress-info">
+                      <span>{{ solvedFor(topic.name) }}/{{ topic.problemCount }} solved</span>
+                      <span class="pct">{{ solvedPct(topic) }}%</span>
+                    </div>
+                    <mat-progress-bar mode="determinate" [value]="solvedPct(topic)" color="accent" />
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            }
+          </div>
+        </div>
+      }
+    }
+  }
+</div>

@@ -1,0 +1,126 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>
+      Problems
+      @if (filterTopicName) {
+        <span class="topic-breadcrumb"> — {{ filterTopicName }}</span>
+      }
+    </h1>
+    <span class="problem-count">{{ filtered.length }} problems</span>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters">
+    <mat-form-field appearance="outline" class="filter-search">
+      <mat-label>Search</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput [(ngModel)]="filterText" placeholder="Filter by title…">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="filter-select">
+      <mat-label>Difficulty</mat-label>
+      <mat-select [(ngModel)]="filterDifficulty">
+        <mat-option value="">All</mat-option>
+        @for (d of difficulties; track d) {
+          <mat-option [value]="d">{{ d }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="filter-select">
+      <mat-label>Status</mat-label>
+      <mat-select [(ngModel)]="filterStatus">
+        <mat-option value="">All</mat-option>
+        @for (s of statuses; track s) {
+          <mat-option [value]="s">{{ s | titlecase }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    @if (filterTopicId) {
+      <button mat-stroked-button (click)="clearTopicFilter()">
+        <mat-icon>close</mat-icon> Clear Topic Filter
+      </button>
+    }
+  </div>
+
+  @if (loading) {
+    <mat-progress-bar mode="indeterminate" />
+  } @else {
+    <table mat-table [dataSource]="filtered" class="problems-table">
+
+      <!-- Title -->
+      <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef>Problem</th>
+        <td mat-cell *matCellDef="let p">
+          <a [routerLink]="['/problems', p.id]" class="problem-link">{{ p.title }}</a>
+          @if (p.leetcodeUrl) {
+            <a [href]="p.leetcodeUrl" target="_blank" class="lc-link" matTooltip="Open on LeetCode">
+              <mat-icon class="ext-icon">open_in_new</mat-icon>
+            </a>
+          }
+        </td>
+      </ng-container>
+
+      <!-- Topic -->
+      <ng-container matColumnDef="topic">
+        <th mat-header-cell *matHeaderCellDef>Topic</th>
+        <td mat-cell *matCellDef="let p">
+          <span class="topic-chip">{{ p.topicName }}</span>
+        </td>
+      </ng-container>
+
+      <!-- Difficulty -->
+      <ng-container matColumnDef="difficulty">
+        <th mat-header-cell *matHeaderCellDef>Difficulty</th>
+        <td mat-cell *matCellDef="let p">
+          <span [ngClass]="diffClass(p.difficulty)" class="diff-pill">{{ p.difficulty }}</span>
+        </td>
+      </ng-container>
+
+      <!-- Status -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let p">
+          <div class="status-cell" [ngClass]="statusClass(p.progressStatus)">
+            <mat-icon class="status-icon">{{ statusIcon(p.progressStatus) }}</mat-icon>
+            <span>{{ p.progressStatus | titlecase }}</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Revisit -->
+      <ng-container matColumnDef="revisit">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let p">
+          @if (p.revisit) {
+            <mat-icon class="revisit-flag" matTooltip="Flagged for revisit">bookmark</mat-icon>
+          }
+        </td>
+      </ng-container>
+
+      <!-- Actions -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let p">
+          <a mat-icon-button [routerLink]="['/problems', p.id]" matTooltip="Open">
+            <mat-icon>arrow_forward</mat-icon>
+          </a>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+          class="problem-row"
+          [routerLink]="['/problems', row.id]">
+      </tr>
+    </table>
+
+    @if (filtered.length === 0) {
+      <div class="empty-state">
+        <mat-icon>search_off</mat-icon>
+        <p>No problems match your filters.</p>
+      </div>
+    }
+  }
+</div>
