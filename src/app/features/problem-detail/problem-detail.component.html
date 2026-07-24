@@ -99,11 +99,14 @@
               </mat-card-header>
               <mat-card-content class="editor-wrap">
                 <div class="monaco-host">
-                  <ngx-monaco-editor
-                    [options]="editorOptions"
-                    [(ngModel)]="code"
-                    style="height: 360px; display: block;">
-                  </ngx-monaco-editor>
+                  @if (editorModel !== null) {
+                    <ngx-monaco-editor
+                      [options]="editorOptions"
+                      [model]="editorModel"
+                      (onInit)="onEditorReady($event)"
+                      style="height: 360px; display: block;">
+                    </ngx-monaco-editor>
+                  }
                 </div>
               </mat-card-content>
             </mat-card>

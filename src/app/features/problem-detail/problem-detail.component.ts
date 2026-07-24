@@ -13,7 +13,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDividerModule } from '@angular/material/divider';
-import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
+import { MonacoEditorModule, NgxEditorModel } from 'ngx-monaco-editor-v2';
 import { forkJoin, of, catchError } from 'rxjs';
 
 import { ProblemService } from '../../core/services/problem.service';
@@ -55,6 +55,10 @@ export class ProblemDetailComponent implements OnInit {
   spaceComplexity = '';
   solutionNotes = '';
 
+  // Monaco — set after data loads so editor picks up the value
+  editorModel: NgxEditorModel | null = null;
+  private monacoEditor: any = null;
+
   // Progress form fields
   personalNotes = '';
   revisit = false;
@@ -95,6 +99,8 @@ export class ProblemDetailComponent implements OnInit {
           this.personalNotes = progress.personalNotes ?? '';
           this.revisit = progress.revisit;
         }
+        // Set model AFTER data loads — Monaco reads this once the editor is ready
+        this.editorModel = { value: this.code, language: 'java' };
         this.loading = false;
       },
       error: () => this.loading = false
@@ -158,6 +164,13 @@ export class ProblemDetailComponent implements OnInit {
       revisit: this.revisit,
       personalNotes: this.personalNotes
     }).subscribe(p => { this.progress = p; this.problem!.revisit = this.revisit; });
+  }
+
+  onEditorReady(editor: any) {
+    this.monacoEditor = editor;
+    editor.onDidChangeModelContent(() => {
+      this.code = editor.getValue();
+    });
   }
 
   back() { this.router.navigate(['/problems']); }
